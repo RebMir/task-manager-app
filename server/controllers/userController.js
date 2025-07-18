@@ -31,7 +31,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
         user.password = undefined;
 
-        res.status(200).json(user);
+        return res.status(200).json({ status: true, user });
     } else {
         console.log("Invalid password");
         return res

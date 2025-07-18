@@ -2,17 +2,16 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup
-} from "firebase/auth";
-import { auth, googleProvider } from "../utils/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { googleProvider } from "../utils/firebase";
 import Textbox from '../components/Textbox';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setCredentials } from '../redux/slices/authSlice'
-import UserInfo from '../components/ViewNotification';
+import { setCredentials } from '../redux/slices/authSlice';
+import axios from 'axios';
+import { auth } from '../utils/firebase';
+
 
 const Login = () => {
   const { user } = useSelector((state) => state.auth); // Optional if using Redux
@@ -31,29 +30,24 @@ const Login = () => {
   const submitHandler = async (data) => {
     const { email, password } = data;
     setErrorMsg("");
-    console.log("Login attempt with email:", email);
 
-  try {
-    // Capture the result of the sign-in
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    console.log("Login success:", userCredential.user);
-    const firebaseUser = userCredentials.user
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        { email, password },
+        { withCredentials: true } 
+      );
 
-    dispatch(setCredentials({
-      email: firebaseUser.user.email,
-      uid: firebaseUser.user.uid,
-      displayName: firebaseUser.user.displayName.user.displayName || "",
-    }));
+      console.log("Backend login successful:", res.data);
 
-    localStorage.setItem("isLoggedIn", "true");
-    navigate("/dashboard");
-    console.log("Navigated to /dashboard");
-  } catch (error) {
-    console.error("Login error code:", error.code);
-    console.error("Login error:", error.message);
-    console.error("Full error object:", error);
-    setErrorMsg("Invalid email or password.");
-  }
+      dispatch(setCredentials(res.data.user)); 
+      localStorage.setItem("isLoggedIn", "true");
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error.response?.data || error.message);
+      setErrorMsg("Invalid email or password.");
+    }
 };
 
   // Google login handler

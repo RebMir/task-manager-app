@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const API_URI = "hhttps://task-manager-app-mvmv.onrender.com/api";
+const API_URI = "https://task-manager-app-mvmv.onrender.com/api";
 
 const baseQuery = fetchBaseQuery({ baseUrl: API_URI});
 
@@ -8,7 +8,8 @@ const baseQuery = fetchBaseQuery({ baseUrl: API_URI});
 export const apiSlice = createApi({
     reducerPath: "api",
     baseQuery: fetchBaseQuery({ 
-        baseUrl: "/api/task",
+        baseUrl: import.meta.env.VITE_API_URL,
+        credentials: "include",
         prepareHeaders: (headers, { getState }) => {
             const token = getState().auth.user?.token;
             if (token) {

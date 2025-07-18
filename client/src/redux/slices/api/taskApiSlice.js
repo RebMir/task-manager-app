@@ -1,5 +1,5 @@
 import { trashTask } from "../../../../../server/controllers/taskController";
-import { TASKS_URL } from "../../../utils/contants";
+import { TASKS_URL } from "../../../utils/constants";
 import { apiSlice } from "../apiSlice";
 
 export const postApiSlice = apiSlice.injectEndpoints({
@@ -83,7 +83,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
 
     getDashboardStats: builder.query({
       query: () => ({
-        url: `/dashboard`,
+        url: `${TASKS_URL}/dashboard`,
         method: "GET",
         credentials: "include",
       }),

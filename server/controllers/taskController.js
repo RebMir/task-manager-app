@@ -187,7 +187,7 @@ export const dashboardStatistics = async (req, res) => {
     const totalTasks = await Task.countDocuments({ user: userId });
     const completed = await Task.countDocuments({ user: userId, stage: "completed" });
     const inProgress = await Task.countDocuments({ user: userId, stage: "in progress" });
-    const todo = await Task.countDocuments({ user: userId, stage: "todo" }); 
+    const todo = await Task.countDocuments({ user: userId, stage: "todo" });
 
     res.status(200).json({totalTasks, completed, inProgress, todo});
   } catch (error) {
